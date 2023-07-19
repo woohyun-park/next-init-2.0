@@ -22,12 +22,24 @@ module.exports = withBundleAnalyzer({
       transform: 'lodash-es/{{member}}',
       preventFullImport: true,
     },
+    '@chakra-ui/react': {
+      transform: '@chakra-ui/react',
+      skipDefaultConversion: true,
+    },
   },
 
   webpack: (config, { isServer }) => {
     if (isServer) {
       require('./src/scripts/generate-sitemap-json');
     }
+    config.module.rules.push({
+      test: /\.(jsx?|tsx?)$/,
+      use: [
+        {
+          loader: './chakra-imports-loader.js',
+        },
+      ],
+    });
     return config;
   },
   async rewrites() {
